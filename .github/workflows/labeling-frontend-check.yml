@@ -1,0 +1,20 @@
+name: Labeling frontend checks
+on:
+  pull_request:
+    branches: [frontend]
+permissions:
+  contents: read
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: npm
+      - run: npm ci
+      - run: npm run tsc
+      - run: node --test src/services/labeling.test.mjs
+      - run: npm run build
